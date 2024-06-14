@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"strings"
+)
 
 //We gonna create deck type here which is a slice of strings
 
-// In case we want to compile both files we should use go run "use both files needed as main is executable and deck contains object" 
+// In case we want to compile both files we should use go run "use both files needed as main is executable and deck contains object"
 type deck []string
 
 func newDeck() deck {
@@ -33,4 +37,12 @@ func (d deck) print() {
 
 func deal(d deck, handSize int) (deck, deck) {
 	return d[:handSize], d[handSize:]
+}
+
+func (d deck) toString() string {
+	return strings.Join([]string(d), ",")
+}
+
+func (d deck) saveToFile(filename string) {
+	ioutil.WriteFile(filename, []byte(d.toString()), 0666)
 }
