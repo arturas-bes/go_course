@@ -1,10 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"os"
+	"strings"
+	"time"
+)
 
 //We gonna create deck type here which is a slice of strings
 
-// In case we want to compile both files we should use go run "use both files needed as main is executable and deck contains object" 
+// In case we want to compile both files we should use go run "use both files needed as main is executable and deck contains object"
 type deck []string
 
 func newDeck() deck {
@@ -33,4 +39,32 @@ func (d deck) print() {
 
 func deal(d deck, handSize int) (deck, deck) {
 	return d[:handSize], d[handSize:]
+}
+
+func (d deck) toString() string {
+	return strings.Join([]string(d), ",")
+}
+
+func (d deck) saveToFile(filename string) {
+	os.WriteFile(filename, []byte(d.toString()), 0666)
+}
+
+func newDeckFromFile(filename string) deck {
+	bs, err := os.ReadFile(filename)
+
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
+	}
+
+	return deck(strings.Split(string(bs), ","))
+}
+
+func (d deck) shuffle() {
+	for i := range d {
+		source := rand.NewSource(time.Now().UnixNano())
+		r := rand.New(source)
+		newPosition := r.Intn(len(d) - 1)
+		d[i], d[newPosition] = d[newPosition], d[i]
+	}
 }
