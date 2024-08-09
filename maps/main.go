@@ -1,5 +1,7 @@
 package main
 
+type logWriter struct{}
+
 func main() {
 
 	// //Here we are declaring a map of colors with a key of string and a value of string
